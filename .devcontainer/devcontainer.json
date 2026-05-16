@@ -1,0 +1,21 @@
+{
+  "name": "D365 Commerce AI Agents",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/azure-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-vscode.powershell",
+        "GitHub.copilot",
+        "github.vscode-pull-request-github"
+      ]
+    }
+  },
+  "postCreateCommand": "dotnet --version && node --version && az --version"
+}
