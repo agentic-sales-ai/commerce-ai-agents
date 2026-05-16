@@ -40,11 +40,14 @@ public class RetailServerClient
     await _auth
         .GetAccessTokenAsync();
 
+Console.WriteLine(
+    $"Searching:{searchText}");
+
 var response =
     await _httpClient
         .GetAsync(
-    "Categories?$top=20&api-version=7.3",
-    token);
+            "Customers?$top=5&api-version=7.3",
+            token);
 
 Console.WriteLine(
     response);
