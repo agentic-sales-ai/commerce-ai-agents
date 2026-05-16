@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[10.0.4, )"
             },
+            "Microsoft.Identity.Client": {
+              "target": "Package",
+              "version": "[4.84.0, )"
+            },
             "OpenAI": {
               "target": "Package",
               "version": "[2.10.0, )"
