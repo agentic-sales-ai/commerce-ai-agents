@@ -14,11 +14,18 @@ builder.Services.AddScoped<RecommendationService>();
 
 builder.Services.AddScoped<CatalogService>();
 
+builder.Services.AddScoped<ICommerceService,
+    MockCommerceService>();
+
 builder.Services.AddScoped<IAIService, OpenAIService>();
 
 builder.Services.Configure<OpenAISettings>(
     builder.Configuration.GetSection("OpenAI"));
 
+builder.Services.Configure<CommerceSettings>(
+    builder.Configuration
+    .GetSection("Commerce"));
+    
 var app = builder.Build();
 
 app.UseSwagger();
