@@ -36,23 +36,20 @@ public class RetailServerClient
 {
     try
     {
-        var endpoint =
-            $"{_settings.BaseUrl}" +
-            "/Commerce";
-
         var token =
     await _auth
         .GetAccessTokenAsync();
 
+var response =
+    await _httpClient
+        .GetAsync(
+            "Commerce",
+            token);
+
 Console.WriteLine(
-    $"Token:{token}");
-    
-        Console.WriteLine(
-            $"Retail endpoint: {endpoint}");
+    response);
 
-        await Task.Delay(100);
-
-        return new List<CommerceProduct>();
+return new List<CommerceProduct>();
     }
     catch(Exception ex)
     {

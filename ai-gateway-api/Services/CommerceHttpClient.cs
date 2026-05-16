@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using CommerceAIAgents.Models;
 using Microsoft.Extensions.Options;
 
@@ -21,11 +22,40 @@ public class CommerceHttpClient
     }
 
     public async Task<string>
-        HealthCheckAsync()
+        GetAsync(
+            string relativeUrl,
+            string token)
     {
-        await Task.Delay(50);
+        _httpClient.DefaultRequestHeaders.Clear();
 
-        return
-            $"Commerce endpoint: {_settings.BaseUrl}";
+        _httpClient
+            .DefaultRequestHeaders
+            .Authorization =
+                new AuthenticationHeaderValue(
+                    "Bearer",
+                    token);
+
+        var url =
+            $"{_settings.BaseUrl}/{relativeUrl}";
+
+        Console.WriteLine(
+            $"GET {url}");
+
+        try
+        {
+            var response =
+                await _httpClient
+                    .GetAsync(url);
+
+            return
+                await response
+                    .Content
+                    .ReadAsStringAsync();
+        }
+        catch(Exception ex)
+        {
+            return
+                $"ERROR:{ex.Message}";
+        }
     }
 }
