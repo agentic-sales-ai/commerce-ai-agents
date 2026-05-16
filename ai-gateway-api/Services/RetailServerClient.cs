@@ -13,13 +13,19 @@ public class RetailServerClient
     private readonly CommerceSettings
         _settings;
 
+    private readonly IAuthService
+    _auth;
+
     public RetailServerClient(
         CommerceHttpClient httpClient,
-        IOptions<CommerceSettings> options)
+        IOptions<CommerceSettings> options,
+        IAuthService auth)
     {
         _httpClient = httpClient;
 
         _settings = options.Value;
+
+        _auth = auth;
     }
 
     public async Task<
@@ -34,6 +40,13 @@ public class RetailServerClient
             $"{_settings.BaseUrl}" +
             "/Commerce";
 
+        var token =
+    await _auth
+        .GetAccessTokenAsync();
+
+Console.WriteLine(
+    $"Token:{token}");
+    
         Console.WriteLine(
             $"Retail endpoint: {endpoint}");
 

@@ -22,6 +22,11 @@ builder.Services
         IRetailServerClient,
         RetailServerClient>();
 
+builder.Services
+    .AddScoped<
+        IAuthService,
+        MockAuthService>();
+        
 builder.Services.AddHttpClient<CommerceHttpClient>();
 
 builder.Services.AddScoped<IAIService, OpenAIService>();
@@ -36,7 +41,7 @@ builder.Services.Configure<CommerceSettings>(
 builder.Services.Configure<AuthSettings>(
     builder.Configuration
     .GetSection("Auth"));
-    
+
 var app = builder.Build();
 
 app.UseSwagger();
