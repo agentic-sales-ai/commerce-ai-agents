@@ -12,11 +12,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<RecommendationService>();
 
-builder.Services.AddScoped<IAIService,MockAIService>();
+builder.Services.AddScoped<IAIService, OpenAIService>();
 
 builder.Services.Configure<OpenAISettings>(
     builder.Configuration.GetSection("OpenAI"));
-    
+
 var app = builder.Build();
 
 app.UseSwagger();

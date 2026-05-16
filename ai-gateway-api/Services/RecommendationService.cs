@@ -20,11 +20,10 @@ public class RecommendationService
 
         return new AssistantResponse
         {
-            Message =
-                $"Intent:{intent.Intent}\n" +
-                $"Budget:{intent.Budget}\n" +
-                $"Confidence:{intent.Confidence}\n" +
-                $"Category:{intent.Category}",
+            Intent = intent,
+
+Message =
+    "Recommendation generated",
 
             Products = new List<ProductRecommendation>
             {

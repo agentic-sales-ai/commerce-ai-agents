@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "L+HnnjG1img=",
+  "dgSpecHash": "x7G93Htm31g=",
   "success": true,
   "projectFilePath": "/workspaces/commerce-ai-agents/ai-gateway-api/ai-gateway-api.csproj",
   "expectedPackageFiles": [
@@ -13,7 +13,21 @@
     "/home/codespace/.nuget/packages/swashbuckle.aspnetcore.swaggergen/10.1.7/swashbuckle.aspnetcore.swaggergen.10.1.7.nupkg.sha512",
     "/home/codespace/.nuget/packages/swashbuckle.aspnetcore.swaggerui/10.1.7/swashbuckle.aspnetcore.swaggerui.10.1.7.nupkg.sha512",
     "/home/codespace/.nuget/packages/system.clientmodel/1.10.0/system.clientmodel.1.10.0.nupkg.sha512",
-    "/home/codespace/.nuget/packages/system.memory.data/10.0.3/system.memory.data.10.0.3.nupkg.sha512"
+    "/home/codespace/.nuget/packages/system.memory.data/10.0.3/system.memory.data.10.0.3.nupkg.sha512",
+    "/home/codespace/.nuget/packages/system.text.json/10.0.8/system.text.json.10.0.8.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "message": "PackageReference System.Text.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "projectPath": "/workspaces/commerce-ai-agents/ai-gateway-api/ai-gateway-api.csproj",
+      "warningLevel": 1,
+      "filePath": "/workspaces/commerce-ai-agents/ai-gateway-api/ai-gateway-api.csproj",
+      "libraryId": "System.Text.Json",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }
