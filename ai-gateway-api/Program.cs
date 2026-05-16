@@ -33,6 +33,10 @@ builder.Services.Configure<CommerceSettings>(
     builder.Configuration
     .GetSection("Commerce"));
 
+builder.Services.Configure<AuthSettings>(
+    builder.Configuration
+    .GetSection("Auth"));
+    
 var app = builder.Build();
 
 app.UseSwagger();
