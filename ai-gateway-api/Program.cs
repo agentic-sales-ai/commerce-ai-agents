@@ -17,6 +17,13 @@ builder.Services.AddScoped<CatalogService>();
 builder.Services.AddScoped<ICommerceService,
     MockCommerceService>();
 
+builder.Services
+    .AddScoped<
+        IRetailServerClient,
+        RetailServerClient>();
+
+builder.Services.AddHttpClient<CommerceHttpClient>();
+
 builder.Services.AddScoped<IAIService, OpenAIService>();
 
 builder.Services.Configure<OpenAISettings>(
@@ -25,7 +32,7 @@ builder.Services.Configure<OpenAISettings>(
 builder.Services.Configure<CommerceSettings>(
     builder.Configuration
     .GetSection("Commerce"));
-    
+
 var app = builder.Build();
 
 app.UseSwagger();

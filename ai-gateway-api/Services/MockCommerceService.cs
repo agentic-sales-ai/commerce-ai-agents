@@ -5,6 +5,20 @@ namespace CommerceAIAgents.Services;
 public class MockCommerceService
     : ICommerceService
 {
+    private readonly CommerceHttpClient
+        _client;
+
+    private readonly IRetailServerClient
+    _retail;
+    
+    public MockCommerceService(
+        CommerceHttpClient client,
+        IRetailServerClient retail)
+    {
+        _client = client;
+        _retail = retail;
+    }
+
     public async Task<List<ProductRecommendation>>
         SearchProductsAsync(
             string searchText,
@@ -12,27 +26,35 @@ public class MockCommerceService
     {
         await Task.Delay(100);
 
-        if(channelId=="101")
-        {
-            return new List<ProductRecommendation>
-            {
-                new ProductRecommendation
-                {
-                    ItemId="MC1001",
-                    Name="Vegetarian Rice Bowl",
-                    Price=399,
-                    Category="Meal"
-                },
+        var endpoint =
+    await _client
+        .HealthCheckAsync();
 
-                new ProductRecommendation
-                {
-                    ItemId="MC1003",
-                    Name="Fresh Orange Juice",
-                    Price=89,
-                    Category="Drink"
-                }
-            };
-        }
+        var retailProducts =
+    await _retail
+        .SearchProductsAsync(
+            searchText,
+            channelId);
+
+        var mappedProducts =
+    retailProducts
+    .Select(x =>
+        new ProductRecommendation
+        {
+            ItemId = x.ItemId,
+            Name = x.Name,
+            Price = x.Price,
+            Category = x.Category
+        })
+    .ToList();
+
+Console.WriteLine(
+    endpoint);
+
+        if(channelId=="101")
+{
+    return mappedProducts;
+}
 
         if(channelId=="999")
         {
