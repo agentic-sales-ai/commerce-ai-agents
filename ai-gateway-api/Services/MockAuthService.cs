@@ -36,9 +36,9 @@ public class MockAuthService
                 await app
                 .AcquireTokenForClient(
                     new[]
-                    {
-                        "https://erp.dynamics.com/.default"
-                    })
+{
+   "https://commerce.dynamics.com/.default"
+})
                 .ExecuteAsync();
 
             Console.WriteLine(
@@ -47,8 +47,34 @@ public class MockAuthService
 Console.WriteLine(
     $"Expires: {result.ExpiresOn}");
 
-            return
-                result.AccessToken;
+            var jwt =
+    result.AccessToken
+    .Split('.');
+
+if(jwt.Length > 1)
+{
+    var payload =
+        jwt[1];
+
+    payload +=
+        new string(
+            '=',
+            (4 - payload.Length % 4) % 4);
+
+    var json =
+        System.Text.Encoding.UTF8
+        .GetString(
+            Convert.FromBase64String(
+                payload
+                .Replace('-','+')
+                .Replace('_','/')));
+
+    Console.WriteLine(
+        $"TOKEN PAYLOAD:\n{json}");
+}
+
+return result.AccessToken;
+
         }
         catch(Exception ex)
         {
