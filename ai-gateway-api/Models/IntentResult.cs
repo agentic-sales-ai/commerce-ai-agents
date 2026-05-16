@@ -10,4 +10,10 @@ public class IntentResult
 
     public List<string> Keywords { get; set; }
         = new();
+
+    public string Category { get; set; } = "";
+
+    public string Sentiment { get; set; } = "";
+
+    public decimal Confidence { get; set; }
 }

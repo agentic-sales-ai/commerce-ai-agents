@@ -9,29 +9,32 @@ public class RecommendationService
     public RecommendationService(
         IAIService ai)
     {
-        _ai=ai;
+        _ai = ai;
     }
 
     public AssistantResponse GetRecommendations(
         AssistantRequest request)
     {
-        var intent=
+        var intent =
             _ai.ParseIntent(request.Query);
 
         return new AssistantResponse
         {
             Message =
-                $"Intent:{intent.Intent}, Budget:{intent.Budget}",
+                $"Intent:{intent.Intent}\n" +
+                $"Budget:{intent.Budget}\n" +
+                $"Confidence:{intent.Confidence}\n" +
+                $"Category:{intent.Category}",
 
-            Products=
-            [
+            Products = new List<ProductRecommendation>
+            {
                 new ProductRecommendation
                 {
-                    ItemId="P1001",
-                    Name="Family Combo Meal",
-                    Price=1299
+                    ItemId = "P1001",
+                    Name = "Family Combo Meal",
+                    Price = 1299
                 }
-            ]
+            }
         };
     }
 }

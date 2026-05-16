@@ -15,6 +15,12 @@ public class MockAIService : IAIService
 
             PartySize=4,
 
+            Category="Restaurant",
+
+            Sentiment="Positive",
+
+            Confidence=0.94m,
+
             Keywords=
             [
                 "family",

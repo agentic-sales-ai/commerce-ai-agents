@@ -1,3 +1,5 @@
+using CommerceAIAgents.Models;
+
 using CommerceAIAgents.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,9 @@ builder.Services.AddScoped<RecommendationService>();
 
 builder.Services.AddScoped<IAIService,MockAIService>();
 
+builder.Services.Configure<OpenAISettings>(
+    builder.Configuration.GetSection("OpenAI"));
+    
 var app = builder.Build();
 
 app.UseSwagger();
