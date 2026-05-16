@@ -6,7 +6,7 @@ public class ParsedIntentResponse
 
     public decimal Budget { get; set; }
 
-    public int PartySize { get; set; }
+    public int? PartySize { get; set; }
 
     public List<string> Keywords { get; set; }
         = new();

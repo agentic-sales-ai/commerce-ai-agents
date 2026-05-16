@@ -53,24 +53,32 @@ var completion =
                 <ParsedIntentResponse>(text);
 
             return new IntentResult
-            {
-                Intent=
-                    parsed?.Intent ?? "",
+{
+    Intent =
+        parsed?.Intent ?? "",
 
-                Budget=
-                    parsed?.Budget,
+    Budget =
+        parsed?.Budget > 0
+            ? parsed.Budget
+            : null,
 
-                PartySize=
-                    parsed?.PartySize,
+    PartySize =
+        parsed?.PartySize > 0
+            ? parsed.PartySize.Value
+            : 1,
 
-                Keywords=
-                    parsed?.Keywords ?? [],
+    Keywords =
+        parsed?.Keywords
+            ?? new List<string>(),
 
-                Confidence=.95m,
+    Confidence =
+        !string.IsNullOrWhiteSpace(
+            parsed?.Intent)
+                ? .95m
+                : .30m,
 
-                Category=
-                    "OpenAI"
-            };
+    Category = "OpenAI"
+};
         }
         catch(Exception ex)
         {

@@ -5,11 +5,14 @@ namespace CommerceAIAgents.Services;
 public class RecommendationService
 {
     private readonly IAIService _ai;
+    private readonly CatalogService _catalog;
 
     public RecommendationService(
-        IAIService ai)
+        IAIService ai,
+        CatalogService catalog)
     {
         _ai = ai;
+        _catalog = catalog;
     }
 
     public AssistantResponse GetRecommendations(
@@ -18,22 +21,23 @@ public class RecommendationService
         var intent =
             _ai.ParseIntent(request.Query);
 
-        return new AssistantResponse
-        {
-            Intent = intent,
+        var products =
+    _catalog.GetRecommendations(
+        intent.Intent,
+        intent.Budget);
 
-Message =
-    "Recommendation generated",
+var message =
+    products.Any()
+    ? "Recommendation generated"
+    : "No matching meal found within budget";
 
-            Products = new List<ProductRecommendation>
-            {
-                new ProductRecommendation
-                {
-                    ItemId = "P1001",
-                    Name = "Family Combo Meal",
-                    Price = 1299
-                }
-            }
-        };
+return new AssistantResponse
+{
+    Intent = intent,
+
+    Message = message,
+
+    Products = products
+};
     }
 }

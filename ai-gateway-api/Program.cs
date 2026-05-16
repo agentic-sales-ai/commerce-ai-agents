@@ -12,6 +12,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<RecommendationService>();
 
+builder.Services.AddScoped<CatalogService>();
+
 builder.Services.AddScoped<IAIService, OpenAIService>();
 
 builder.Services.Configure<OpenAISettings>(

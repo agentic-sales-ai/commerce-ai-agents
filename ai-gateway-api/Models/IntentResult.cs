@@ -6,7 +6,7 @@ public class IntentResult
 
     public decimal? Budget { get; set; }
 
-    public int? PartySize { get; set; }
+    public int PartySize { get; set; } = 1;
 
     public List<string> Keywords { get; set; }
         = new();
