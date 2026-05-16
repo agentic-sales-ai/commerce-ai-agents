@@ -34,12 +34,12 @@ public class MockAuthService
 
             var result =
                 await app
-                .AcquireTokenForClient(
-                    new[]
-{
-   "https://commerce.dynamics.com/.default"
-})
-                .ExecuteAsync();
+.AcquireTokenForClient(
+    new[]
+    {
+        $"{_settings.Resource}/.default"
+    })
+.ExecuteAsync();
 
             Console.WriteLine(
     $"Token acquired for: {result.Account}");
@@ -47,6 +47,12 @@ public class MockAuthService
 Console.WriteLine(
     $"Expires: {result.ExpiresOn}");
 
+Console.WriteLine(
+    $"Configured Resource: {_settings.Resource}");
+
+Console.WriteLine(
+    $"ClientId: {_settings.ClientId}");
+    
             var jwt =
     result.AccessToken
     .Split('.');

@@ -22,48 +22,60 @@ public class CommerceHttpClient
     }
 
     public async Task<string>
-        GetAsync(
-            string relativeUrl,
-            string token)
+GetAsync(
+    string relativeUrl,
+    string token)
+{
+    _httpClient.DefaultRequestHeaders.Clear();
+
+    _httpClient
+        .DefaultRequestHeaders
+        .Add(
+            "Authorization",
+            $"id_token {token}");
+
+    _httpClient
+        .DefaultRequestHeaders
+        .Add(
+            "OUN",
+            "052");
+
+    _httpClient
+        .DefaultRequestHeaders
+        .Add(
+            "Accept",
+            "application/json");
+
+    var url =
+        $"{_settings.BaseUrl}/{relativeUrl}";
+
+    Console.WriteLine(
+        $"GET {url}");
+
+    try
     {
-        _httpClient.DefaultRequestHeaders.Clear();
+        var response =
+            await _httpClient
+                .GetAsync(url);
 
-        _httpClient
-            .DefaultRequestHeaders
-            .Authorization =
-                new AuthenticationHeaderValue(
-                    "Bearer",
-                    token);
-
-        var url =
-            $"{_settings.BaseUrl}/{relativeUrl}";
+        var content =
+            await response
+                .Content
+                .ReadAsStringAsync();
 
         Console.WriteLine(
-            $"GET {url}");
+            $"Status:{response.StatusCode}");
 
-        try
-        {
-            var response =
-                await _httpClient
-                    .GetAsync(url);
+        Console.WriteLine(
+            content);
 
-            var content =
-    await response
-        .Content
-        .ReadAsStringAsync();
-
-Console.WriteLine(
-    $"Status:{response.StatusCode}");
-
-Console.WriteLine(
-    content);
-
-return content;
-        }
-        catch(Exception ex)
-        {
-            return
-                $"ERROR:{ex.Message}";
-        }
+        return content;
     }
+    catch(Exception ex)
+    {
+        return
+            $"ERROR:{ex.Message}";
+    }
+}
+
 }

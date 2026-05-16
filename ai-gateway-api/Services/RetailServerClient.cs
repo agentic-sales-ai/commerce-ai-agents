@@ -43,8 +43,8 @@ public class RetailServerClient
 var response =
     await _httpClient
         .GetAsync(
-            "Commerce",
-            token);
+    "Categories?$top=20&api-version=7.3",
+    token);
 
 Console.WriteLine(
     response);
