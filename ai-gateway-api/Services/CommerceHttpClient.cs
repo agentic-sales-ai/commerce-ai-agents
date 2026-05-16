@@ -47,10 +47,18 @@ public class CommerceHttpClient
                 await _httpClient
                     .GetAsync(url);
 
-            return
-                await response
-                    .Content
-                    .ReadAsStringAsync();
+            var content =
+    await response
+        .Content
+        .ReadAsStringAsync();
+
+Console.WriteLine(
+    $"Status:{response.StatusCode}");
+
+Console.WriteLine(
+    content);
+
+return content;
         }
         catch(Exception ex)
         {
