@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<RecommendationService>();
 
+builder.Services.AddScoped<IAIService,MockAIService>();
+
 var app = builder.Build();
 
 app.UseSwagger();

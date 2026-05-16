@@ -4,28 +4,32 @@ namespace CommerceAIAgents.Services;
 
 public class RecommendationService
 {
+    private readonly IAIService _ai;
+
+    public RecommendationService(
+        IAIService ai)
+    {
+        _ai=ai;
+    }
+
     public AssistantResponse GetRecommendations(
         AssistantRequest request)
     {
+        var intent=
+            _ai.ParseIntent(request.Query);
+
         return new AssistantResponse
         {
             Message =
-                $"Recommendations for: {request.Query}",
+                $"Intent:{intent.Intent}, Budget:{intent.Budget}",
 
-            Products =
+            Products=
             [
                 new ProductRecommendation
                 {
                     ItemId="P1001",
-                    Name="Paneer Tikka Combo",
-                    Price=449
-                },
-
-                new ProductRecommendation
-                {
-                    ItemId="P1002",
-                    Name="Masala Cola",
-                    Price=49
+                    Name="Family Combo Meal",
+                    Price=1299
                 }
             ]
         };
