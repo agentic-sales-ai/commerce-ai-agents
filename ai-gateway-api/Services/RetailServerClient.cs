@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CommerceAIAgents.Models;
 using CommerceAIAgents.Models.Commerce;
 using Microsoft.Extensions.Options;
@@ -14,7 +15,7 @@ public class RetailServerClient
         _settings;
 
     private readonly IAuthService
-    _auth;
+        _auth;
 
     public RetailServerClient(
         CommerceHttpClient httpClient,
@@ -29,37 +30,51 @@ public class RetailServerClient
     }
 
     public async Task<
-    List<CommerceProduct>>
-    SearchProductsAsync(
-        string searchText,
-        string channelId)
-{
-    try
+        List<CommerceProduct>>
+        SearchProductsAsync(
+            string searchText,
+            string channelId)
     {
-        var token =
-    await _auth
-        .GetAccessTokenAsync();
+        try
+        {
+            var token =
+                await _auth
+                    .GetAccessTokenAsync();
 
-Console.WriteLine(
-    $"Searching:{searchText}");
+            Console.WriteLine(
+                "Fetching live Commerce categories...");
 
-var response =
-    await _httpClient
-        .GetAsync(
-            "Customers?$top=5&api-version=7.3",
-            token);
+            var response =
+                await _httpClient
+                    .GetAsync(
+                        "Categories?$top=20&api-version=7.3",
+                        token);
 
-Console.WriteLine(
-    response);
+            Console.WriteLine(
+                response);
 
-return new List<CommerceProduct>();
+            var options =
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+            var categoryResponse =
+                JsonSerializer.Deserialize<
+                    CommerceApiResponse<CommerceProduct>>(
+                        response,
+                        options);
+
+            return
+                categoryResponse?.Value
+                ?? new List<CommerceProduct>();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(
+                ex.Message);
+
+            return new List<CommerceProduct>();
+        }
     }
-    catch(Exception ex)
-    {
-        Console.WriteLine(
-            ex.Message);
-
-        return new List<CommerceProduct>();
-    }
-}
 }

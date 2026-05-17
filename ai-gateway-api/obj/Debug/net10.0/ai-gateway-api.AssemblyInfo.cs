@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ai-gateway-api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b37757c4e6070d098fae9c80ac88cd5fb7181772")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f5c707f50cc76d3942f3b5ed6549c31ebc7c974")]
 [assembly: System.Reflection.AssemblyProductAttribute("ai-gateway-api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ai-gateway-api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

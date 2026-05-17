@@ -34,11 +34,9 @@ GetAsync(
             "Authorization",
             $"id_token {token}");
 
-    _httpClient
-        .DefaultRequestHeaders
-        .Add(
-            "OUN",
-            "052");
+    _httpClient.DefaultRequestHeaders.Add(
+    "OUN",
+    _settings.OUN);
 
     _httpClient
         .DefaultRequestHeaders

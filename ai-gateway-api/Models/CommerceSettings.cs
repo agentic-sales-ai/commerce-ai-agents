@@ -13,4 +13,6 @@ public class CommerceSettings
 
     public string ClientId { get; set; }
         = "";
+    
+    public string OUN { get; set; } = "";
 }
