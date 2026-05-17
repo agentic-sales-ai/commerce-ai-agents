@@ -14,16 +14,22 @@ public class CatalogService
     }
 
     public List<ProductRecommendation>
-GetRecommendations(
-    string intent,
-    decimal? budget,
-    string channelId)
+        GetRecommendations(
+            string intent,
+            decimal? budget,
+            string channelId)
     {
+        var searchText =
+            string.IsNullOrWhiteSpace(
+                intent)
+            ? ""
+            : intent;
+
         var products =
             _commerce
             .SearchProductsAsync(
-    intent,
-    channelId)
+                searchText,
+                channelId)
             .Result;
 
         if (budget.HasValue)
@@ -51,11 +57,13 @@ GetRecommendations(
                 filteredProducts;
         }
 
-        if(!products.Any(
-            x=>x.Category=="Meal"))
+        Console.WriteLine(
+            $"Products returned: {products.Count}");
+
+        if(products.Any())
         {
-            return new List
-                <ProductRecommendation>();
+            Console.WriteLine(
+                $"First result: {products[0].Name}");
         }
 
         return products;

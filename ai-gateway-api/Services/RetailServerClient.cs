@@ -35,6 +35,16 @@ public class RetailServerClient
             string searchText,
             string channelId)
     {
+        Console.WriteLine(
+            $"Product search requested: {searchText}");
+
+        return new List<CommerceProduct>();
+    }
+
+    public async Task<
+        List<CommerceProduct>>
+        GetCategoriesAsync()
+    {
         try
         {
             var token =
@@ -50,9 +60,6 @@ public class RetailServerClient
                         "Categories?$top=20&api-version=7.3",
                         token);
 
-            Console.WriteLine(
-                response);
-
             var options =
                 new JsonSerializerOptions
                 {
@@ -60,25 +67,25 @@ public class RetailServerClient
                 };
 
             var categoryResponse =
-    JsonSerializer.Deserialize<
-        CommerceApiResponse<CommerceProduct>>(
-            response,
-            options);
+                JsonSerializer.Deserialize<
+                    CommerceApiResponse<CommerceProduct>>(
+                        response,
+                        options);
 
-var products =
-    categoryResponse?.Value
-    ?? new List<CommerceProduct>();
+            var products =
+                categoryResponse?.Value
+                ?? new List<CommerceProduct>();
 
-Console.WriteLine(
-    $"Items returned: {products.Count}");
+            Console.WriteLine(
+                $"Items returned: {products.Count}");
 
-if(products.Any())
-{
-    Console.WriteLine(
-        $"First item: {products[0].Name}");
-}
+            if(products.Any())
+            {
+                Console.WriteLine(
+                    $"First item: {products[0].Name}");
+            }
 
-return products;
+            return products;
         }
         catch(Exception ex)
         {

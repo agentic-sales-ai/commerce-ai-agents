@@ -28,10 +28,12 @@ public class RecommendationService
 
         var products =
             _catalog
-            .GetRecommendations(
-                intent.Intent,
-                intent.Budget,
-                request.ChannelId);
+.GetRecommendations(
+    intent.Keywords
+        .FirstOrDefault()
+        ?? intent.Intent,
+    intent.Budget,
+    request.ChannelId);
 
         var message =
             products.Any()

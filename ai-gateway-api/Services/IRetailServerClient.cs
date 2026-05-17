@@ -8,4 +8,8 @@ public interface IRetailServerClient
         SearchProductsAsync(
             string searchText,
             string channelId);
+    
+    Task<List<CommerceProduct>>
+        GetCategoriesAsync();
+
 }

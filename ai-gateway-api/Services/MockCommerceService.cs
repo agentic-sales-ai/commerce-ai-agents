@@ -29,19 +29,36 @@ public class MockCommerceService
 
         var retailProducts =
             await _retail
-                .SearchProductsAsync(
+                .GetCategoriesAsync();
+
+        var filteredProducts =
+            retailProducts
+            .Where(x =>
+                x.Name.Contains(
                     searchText,
-                    channelId);
+                    StringComparison
+                        .OrdinalIgnoreCase))
+            .ToList();
+
+        Console.WriteLine(
+            $"Matched items: {filteredProducts.Count}");
 
         var mappedProducts =
-            retailProducts
+            filteredProducts
             .Select(x =>
                 new ProductRecommendation
                 {
-                    ItemId = x.ItemId,
-                    Name = x.Name,
-                    Price = x.Price,
-                    Category = x.Category
+                    ItemId =
+                        x.RecordId
+                        .ToString(),
+
+                    Name =
+                        x.Name,
+
+                    Price = 0,
+
+                    Category =
+                        "Commerce"
                 })
             .ToList();
 
