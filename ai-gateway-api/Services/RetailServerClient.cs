@@ -60,14 +60,25 @@ public class RetailServerClient
                 };
 
             var categoryResponse =
-                JsonSerializer.Deserialize<
-                    CommerceApiResponse<CommerceProduct>>(
-                        response,
-                        options);
+    JsonSerializer.Deserialize<
+        CommerceApiResponse<CommerceProduct>>(
+            response,
+            options);
 
-            return
-                categoryResponse?.Value
-                ?? new List<CommerceProduct>();
+var products =
+    categoryResponse?.Value
+    ?? new List<CommerceProduct>();
+
+Console.WriteLine(
+    $"Items returned: {products.Count}");
+
+if(products.Any())
+{
+    Console.WriteLine(
+        $"First item: {products[0].Name}");
+}
+
+return products;
         }
         catch(Exception ex)
         {
