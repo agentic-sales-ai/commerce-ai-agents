@@ -60,32 +60,8 @@ public class RetailServerClient
                         "Categories?$top=20&api-version=7.3",
                         token);
 
-            var options =
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-
-            var categoryResponse =
-                JsonSerializer.Deserialize<
-                    CommerceApiResponse<CommerceProduct>>(
-                        response,
-                        options);
-
-            var products =
-                categoryResponse?.Value
-                ?? new List<CommerceProduct>();
-
-            Console.WriteLine(
-                $"Items returned: {products.Count}");
-
-            if(products.Any())
-            {
-                Console.WriteLine(
-                    $"First item: {products[0].Name}");
-            }
-
-            return products;
+            return DeserializeProducts(
+                response);
         }
         catch(Exception ex)
         {
@@ -94,5 +70,69 @@ public class RetailServerClient
 
             return new List<CommerceProduct>();
         }
+    }
+
+    public async Task<
+        List<CommerceProduct>>
+        GetProductsByCategoryAsync(
+            long categoryId)
+    {
+        try
+        {
+            var token =
+                await _auth
+                    .GetAccessTokenAsync();
+
+            Console.WriteLine(
+                $"Loading products for category {categoryId}");
+
+            var response =
+                await _httpClient
+                    .GetAsync(
+$"Products/SearchByCategory(channelId=5637144592,catalogId=0,categoryId={categoryId})?$top=20&api-version=7.3",
+                        token);
+
+            return DeserializeProducts(
+                response);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(
+                ex.Message);
+
+            return new List<CommerceProduct>();
+        }
+    }
+
+    private List<CommerceProduct>
+        DeserializeProducts(
+            string response)
+    {
+        var options =
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+        var result =
+            JsonSerializer.Deserialize<
+                CommerceApiResponse<CommerceProduct>>(
+                    response,
+                    options);
+
+        var products =
+            result?.Value
+            ?? new List<CommerceProduct>();
+
+        Console.WriteLine(
+            $"Items returned: {products.Count}");
+
+        if(products.Any())
+        {
+            Console.WriteLine(
+                $"First item: {products[0].Name}");
+        }
+
+        return products;
     }
 }
