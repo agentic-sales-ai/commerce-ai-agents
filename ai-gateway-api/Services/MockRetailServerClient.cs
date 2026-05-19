@@ -23,16 +23,6 @@ public class MockRetailServerClient
                 Price = 399,
                 Category = "Meal",
                 IsAvailable = true
-            },
-
-            new CommerceProduct
-            {
-                RecordId = 2,
-                ItemId = "RS1002",
-                Name = "Retail Orange Juice",
-                Price = 89,
-                Category = "Drink",
-                IsAvailable = true
             }
         ];
     }
@@ -47,20 +37,8 @@ public class MockRetailServerClient
         [
             new CommerceProduct
             {
-                RecordId = 22565426194,
-                Name = "Fashion"
-            },
-
-            new CommerceProduct
-            {
-                RecordId = 22565426205,
-                Name = "Tops"
-            },
-
-            new CommerceProduct
-            {
-                RecordId = 22565426203,
-                Name = "Womenswear"
+                RecordId=22565426205,
+                Name="Tops"
             }
         ];
     }
@@ -68,30 +46,40 @@ public class MockRetailServerClient
     public async Task<
         List<CommerceProduct>>
         GetProductsByCategoryAsync(
-            long categoryId)
+            long categoryId,
+            long channelRecordId)
     {
         await Task.Delay(100);
+
+        Console.WriteLine(
+            $"Mock channel:{channelRecordId}");
 
         return
         [
             new CommerceProduct
             {
-                RecordId = 1001,
-                ItemId = "P1001",
-                Name = "Mock Shirt",
-                Price = 499,
-                Category = "Fashion",
-                IsAvailable = true
-            },
+                RecordId=1001,
+                ItemId="81121",
+                Name="Trim Fit Shirt",
+                Price=53.99m
+            }
+        ];
+    }
 
-            new CommerceProduct
+    public async Task<
+        List<CommerceChannel>>
+        GetChannelsAsync()
+    {
+        await Task.Delay(100);
+
+        return
+        [
+            new CommerceChannel
             {
-                RecordId = 1002,
-                ItemId = "P1002",
-                Name = "Mock Jeans",
-                Price = 899,
-                Category = "Fashion",
-                IsAvailable = true
+                Name="Houston",
+                OperatingUnitNumber="052",
+                RecordId=5637144592,
+                InventoryLocationId="HOUSTON"
             }
         ];
     }

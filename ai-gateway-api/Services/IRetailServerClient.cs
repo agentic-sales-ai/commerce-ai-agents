@@ -14,5 +14,9 @@ public interface IRetailServerClient
 
     Task<List<CommerceProduct>>
         GetProductsByCategoryAsync(
-            long categoryId);
+            long categoryId,
+            long channelRecordId);
+
+    Task<List<CommerceChannel>>
+        GetChannelsAsync();
 }

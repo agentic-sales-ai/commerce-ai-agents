@@ -18,11 +18,17 @@ public class RetailServerClient
         _auth;
 
     private List<CommerceProduct>
-        _cachedCategories =
-            new();
+        _cachedCategories = new();
 
     private DateTimeOffset
         _categoryCacheTime =
+            DateTimeOffset.MinValue;
+
+    private List<CommerceChannel>
+        _cachedChannels = new();
+
+    private DateTimeOffset
+        _channelCacheTime =
             DateTimeOffset.MinValue;
 
     public RetailServerClient(
@@ -31,9 +37,7 @@ public class RetailServerClient
         IAuthService auth)
     {
         _httpClient = httpClient;
-
         _settings = options.Value;
-
         _auth = auth;
     }
 
@@ -43,10 +47,77 @@ public class RetailServerClient
             string searchText,
             string channelId)
     {
-        Console.WriteLine(
-            $"Product search requested: {searchText}");
-
         return new List<CommerceProduct>();
+    }
+
+    public async Task<
+        List<CommerceChannel>>
+        GetChannelsAsync()
+    {
+        try
+        {
+            if(_cachedChannels.Any()
+                &&
+               DateTimeOffset.UtcNow
+               <
+               _channelCacheTime
+               .AddMinutes(30))
+            {
+                Console.WriteLine(
+                    "Using cached channels");
+
+                return _cachedChannels;
+            }
+
+            var token =
+                await _auth
+                    .GetAccessTokenAsync();
+
+            Console.WriteLine(
+                "Loading channels...");
+
+            var response =
+                await _httpClient
+                    .GetAsync(
+"GetChannels()?$top=20&api-version=7.3",
+                    token);
+
+            var options =
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive=true
+                };
+
+            var result =
+                JsonSerializer.Deserialize<
+                    CommerceApiResponse
+                    <CommerceChannel>>
+                    (
+                        response,
+                        options
+                    );
+
+            _cachedChannels =
+                result?.Value
+                ??
+                new();
+
+            _channelCacheTime =
+                DateTimeOffset.UtcNow;
+
+            Console.WriteLine(
+$"Channels:{_cachedChannels.Count}");
+
+            return
+                _cachedChannels;
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(
+                ex.Message);
+
+            return new();
+        }
     }
 
     public async Task<
@@ -58,13 +129,15 @@ public class RetailServerClient
             if(_cachedCategories.Any()
                 &&
                DateTimeOffset.UtcNow
-               < _categoryCacheTime
-                    .AddMinutes(30))
+               <
+               _categoryCacheTime
+               .AddMinutes(30))
             {
                 Console.WriteLine(
                     "Using cached categories");
 
-                return _cachedCategories;
+                return
+                    _cachedCategories;
             }
 
             var token =
@@ -72,39 +145,38 @@ public class RetailServerClient
                     .GetAccessTokenAsync();
 
             Console.WriteLine(
-                "Fetching live Commerce categories...");
+"Fetching live Commerce categories...");
 
             var response =
                 await _httpClient
                     .GetAsync(
-                    "Categories?$top=20&api-version=7.3",
+"Categories?$top=20&api-version=7.3",
                     token);
 
-            var categories =
+            _cachedCategories =
                 DeserializeProducts(
                     response);
-
-            _cachedCategories =
-                categories;
 
             _categoryCacheTime =
                 DateTimeOffset.UtcNow;
 
-            return categories;
+            return
+                _cachedCategories;
         }
         catch(Exception ex)
         {
             Console.WriteLine(
                 ex.Message);
 
-            return new List<CommerceProduct>();
+            return new();
         }
     }
 
     public async Task<
         List<CommerceProduct>>
         GetProductsByCategoryAsync(
-            long categoryId)
+            long categoryId,
+            long channelRecordId)
     {
         try
         {
@@ -113,23 +185,24 @@ public class RetailServerClient
                     .GetAccessTokenAsync();
 
             Console.WriteLine(
-$"Loading products for category {categoryId}");
+$"Loading products for channel {channelRecordId}");
 
             var response =
                 await _httpClient
                     .GetAsync(
-$"Products/SearchByCategory(channelId=5637144592,catalogId=0,categoryId={categoryId})?$top=20&api-version=7.3",
+$"Products/SearchByCategory(channelId={channelRecordId},catalogId=0,categoryId={categoryId})?$top=20&api-version=7.3",
                     token);
 
-            return DeserializeProducts(
-                response);
+            return
+                DeserializeProducts(
+                    response);
         }
         catch(Exception ex)
         {
             Console.WriteLine(
                 ex.Message);
 
-            return new List<CommerceProduct>();
+            return new();
         }
     }
 
@@ -145,26 +218,16 @@ $"Products/SearchByCategory(channelId=5637144592,catalogId=0,categoryId={categor
 
         var result =
             JsonSerializer.Deserialize<
-                CommerceApiResponse<CommerceProduct>>
+                CommerceApiResponse
+                <CommerceProduct>>
                 (
                     response,
                     options
                 );
 
-        var products =
+        return
             result?.Value
             ??
-            new List<CommerceProduct>();
-
-        Console.WriteLine(
-            $"Items returned: {products.Count}");
-
-        if(products.Any())
-        {
-            Console.WriteLine(
-                $"First item: {products[0].Name}");
-        }
-
-        return products;
+            new();
     }
 }

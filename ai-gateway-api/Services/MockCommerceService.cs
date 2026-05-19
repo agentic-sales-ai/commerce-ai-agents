@@ -27,6 +27,32 @@ public class MockCommerceService
     {
         await Task.Delay(100);
 
+        var channels =
+            await _retail
+                .GetChannelsAsync();
+
+        var channel =
+            channels
+            .FirstOrDefault(
+                x =>
+                x.OperatingUnitNumber
+                ==
+                channelId);
+
+        if(channel == null)
+        {
+            Console.WriteLine(
+                $"Channel not found:{channelId}");
+
+            return new List<ProductRecommendation>();
+        }
+
+        Console.WriteLine(
+            $"Resolved channel:{channel.Name}");
+
+        Console.WriteLine(
+            $"Channel RecordId:{channel.RecordId}");
+
         var categories =
             await _retail
                 .GetCategoriesAsync();
@@ -37,7 +63,7 @@ public class MockCommerceService
                 x.Name.Contains(
                     searchText,
                     StringComparison
-                        .OrdinalIgnoreCase));
+                    .OrdinalIgnoreCase));
 
         if(matchedCategory == null)
         {
@@ -48,15 +74,16 @@ public class MockCommerceService
         }
 
         Console.WriteLine(
-            $"Matched category: {matchedCategory.Name}");
+            $"Matched category:{matchedCategory.Name}");
 
         var products =
-            await _retail
-                .GetProductsByCategoryAsync(
-                    matchedCategory.RecordId);
+    await _retail
+        .GetProductsByCategoryAsync(
+            matchedCategory.RecordId,
+            channel.RecordId);
 
         Console.WriteLine(
-            $"Products found: {products.Count}");
+            $"Products found:{products.Count}");
 
         return products
             .Select(x =>
