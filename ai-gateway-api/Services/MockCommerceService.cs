@@ -72,7 +72,25 @@ public class MockCommerceService
                         x.Price,
 
                     Category =
-                        matchedCategory.Name
+                        matchedCategory.Name,
+
+                    ImageUrl =
+                        x.PrimaryImageUrl,
+
+                    Rating =
+                        x.AverageRating,
+
+                    TotalRatings =
+                        x.TotalRatings,
+
+                    Description =
+                        x.Description,
+
+                    BasePrice =
+                        x.BasePrice,
+
+                    ProductNumber =
+                        x.ProductNumber
                 })
             .ToList();
     }

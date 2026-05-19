@@ -9,4 +9,16 @@ public class ProductRecommendation
     public decimal Price { get; set; }
 
     public string Category { get; set; } = "";
+
+    public string ImageUrl { get; set; } = "";
+
+    public double Rating { get; set; }
+
+    public int TotalRatings { get; set; }
+
+    public string Description { get; set; } = "";
+
+    public decimal BasePrice { get; set; }
+
+    public string ProductNumber { get; set; } = "";
 }
