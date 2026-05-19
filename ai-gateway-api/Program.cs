@@ -18,7 +18,7 @@ builder.Services.AddScoped<ICommerceService,
     MockCommerceService>();
 
 builder.Services
-    .AddScoped<
+    .AddSingleton<
         IRetailServerClient,
         RetailServerClient>();
 

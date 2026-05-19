@@ -17,6 +17,14 @@ public class RetailServerClient
     private readonly IAuthService
         _auth;
 
+    private List<CommerceProduct>
+        _cachedCategories =
+            new();
+
+    private DateTimeOffset
+        _categoryCacheTime =
+            DateTimeOffset.MinValue;
+
     public RetailServerClient(
         CommerceHttpClient httpClient,
         IOptions<CommerceSettings> options,
@@ -47,6 +55,18 @@ public class RetailServerClient
     {
         try
         {
+            if(_cachedCategories.Any()
+                &&
+               DateTimeOffset.UtcNow
+               < _categoryCacheTime
+                    .AddMinutes(30))
+            {
+                Console.WriteLine(
+                    "Using cached categories");
+
+                return _cachedCategories;
+            }
+
             var token =
                 await _auth
                     .GetAccessTokenAsync();
@@ -57,11 +77,20 @@ public class RetailServerClient
             var response =
                 await _httpClient
                     .GetAsync(
-                        "Categories?$top=20&api-version=7.3",
-                        token);
+                    "Categories?$top=20&api-version=7.3",
+                    token);
 
-            return DeserializeProducts(
-                response);
+            var categories =
+                DeserializeProducts(
+                    response);
+
+            _cachedCategories =
+                categories;
+
+            _categoryCacheTime =
+                DateTimeOffset.UtcNow;
+
+            return categories;
         }
         catch(Exception ex)
         {
@@ -84,13 +113,13 @@ public class RetailServerClient
                     .GetAccessTokenAsync();
 
             Console.WriteLine(
-                $"Loading products for category {categoryId}");
+$"Loading products for category {categoryId}");
 
             var response =
                 await _httpClient
                     .GetAsync(
 $"Products/SearchByCategory(channelId=5637144592,catalogId=0,categoryId={categoryId})?$top=20&api-version=7.3",
-                        token);
+                    token);
 
             return DeserializeProducts(
                 response);
@@ -111,18 +140,21 @@ $"Products/SearchByCategory(channelId=5637144592,catalogId=0,categoryId={categor
         var options =
             new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive=true
             };
 
         var result =
             JsonSerializer.Deserialize<
-                CommerceApiResponse<CommerceProduct>>(
+                CommerceApiResponse<CommerceProduct>>
+                (
                     response,
-                    options);
+                    options
+                );
 
         var products =
             result?.Value
-            ?? new List<CommerceProduct>();
+            ??
+            new List<CommerceProduct>();
 
         Console.WriteLine(
             $"Items returned: {products.Count}");
