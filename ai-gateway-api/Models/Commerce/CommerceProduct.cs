@@ -19,4 +19,58 @@ public class CommerceProduct
         get;
         set;
     } = "";
+
+    public string PrimaryImageUrl
+    {
+        get;
+        set;
+    } = "";
+
+    public string ProductNumber
+    {
+        get;
+        set;
+    } = "";
+
+    public double AverageRating
+    {
+        get;
+        set;
+    }
+
+    public int TotalRatings
+    {
+        get;
+        set;
+    }
+
+    public string Description
+    {
+        get;
+        set;
+    } = "";
+
+    public decimal BasePrice
+    {
+        get;
+        set;
+    }
+
+    public bool IsMasterProduct
+    {
+        get;
+        set;
+    }
+
+    public long MasterProductId
+    {
+        get;
+        set;
+    }
+
+    public string DefaultUnitOfMeasure
+    {
+        get;
+        set;
+    } = "";
 }

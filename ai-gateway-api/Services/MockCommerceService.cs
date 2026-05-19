@@ -27,41 +27,53 @@ public class MockCommerceService
     {
         await Task.Delay(100);
 
-        var retailProducts =
+        var categories =
             await _retail
                 .GetCategoriesAsync();
 
-        var filteredProducts =
-            retailProducts
-            .Where(x =>
+        var matchedCategory =
+            categories
+            .FirstOrDefault(x =>
                 x.Name.Contains(
                     searchText,
                     StringComparison
-                        .OrdinalIgnoreCase))
-            .ToList();
+                        .OrdinalIgnoreCase));
+
+        if(matchedCategory == null)
+        {
+            Console.WriteLine(
+                "No category found");
+
+            return new List<ProductRecommendation>();
+        }
 
         Console.WriteLine(
-            $"Matched items: {filteredProducts.Count}");
+            $"Matched category: {matchedCategory.Name}");
 
-        var mappedProducts =
-            filteredProducts
+        var products =
+            await _retail
+                .GetProductsByCategoryAsync(
+                    matchedCategory.RecordId);
+
+        Console.WriteLine(
+            $"Products found: {products.Count}");
+
+        return products
             .Select(x =>
                 new ProductRecommendation
                 {
                     ItemId =
-                        x.RecordId
-                        .ToString(),
+                        x.ItemId,
 
                     Name =
                         x.Name,
 
-                    Price = 0,
+                    Price =
+                        x.Price,
 
                     Category =
-                        "Commerce"
+                        matchedCategory.Name
                 })
             .ToList();
-
-        return mappedProducts;
     }
 }
