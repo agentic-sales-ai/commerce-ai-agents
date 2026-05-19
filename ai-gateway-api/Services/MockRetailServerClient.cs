@@ -53,14 +53,45 @@ public class MockRetailServerClient
 
             new CommerceProduct
             {
-                RecordId = 22565426195,
-                Name = "Menswear"
+                RecordId = 22565426205,
+                Name = "Tops"
             },
 
             new CommerceProduct
             {
                 RecordId = 22565426203,
                 Name = "Womenswear"
+            }
+        ];
+    }
+
+    public async Task<
+        List<CommerceProduct>>
+        GetProductsByCategoryAsync(
+            long categoryId)
+    {
+        await Task.Delay(100);
+
+        return
+        [
+            new CommerceProduct
+            {
+                RecordId = 1001,
+                ItemId = "P1001",
+                Name = "Mock Shirt",
+                Price = 499,
+                Category = "Fashion",
+                IsAvailable = true
+            },
+
+            new CommerceProduct
+            {
+                RecordId = 1002,
+                ItemId = "P1002",
+                Name = "Mock Jeans",
+                Price = 899,
+                Category = "Fashion",
+                IsAvailable = true
             }
         ];
     }
