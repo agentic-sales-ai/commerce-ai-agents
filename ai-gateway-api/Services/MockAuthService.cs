@@ -10,6 +10,13 @@ public class MockAuthService
     private readonly AuthSettings
         _settings;
 
+    private string
+        _cachedToken = "";
+
+    private DateTimeOffset
+        _expiresOn =
+            DateTimeOffset.MinValue;
+
     public MockAuthService(
         IOptions<AuthSettings> options)
     {
@@ -22,6 +29,18 @@ public class MockAuthService
     {
         try
         {
+            if(!string.IsNullOrEmpty(
+                _cachedToken)
+               &&
+               DateTimeOffset.UtcNow
+               < _expiresOn.AddMinutes(-5))
+            {
+                Console.WriteLine(
+                    "Using cached token");
+
+                return _cachedToken;
+            }
+
             var app =
                 ConfidentialClientApplicationBuilder
                 .Create(
@@ -29,58 +48,32 @@ public class MockAuthService
                 .WithClientSecret(
                     _settings.ClientSecret)
                 .WithAuthority(
-                    $"https://login.microsoftonline.com/{_settings.TenantId}")
+$"https://login.microsoftonline.com/{_settings.TenantId}")
                 .Build();
 
             var result =
                 await app
-.AcquireTokenForClient(
-    new[]
-    {
-        $"{_settings.Resource}/.default"
-    })
-.ExecuteAsync();
+                    .AcquireTokenForClient(
+                    new[]
+                    {
+                        $"{_settings.Resource}/.default"
+                    })
+                    .ExecuteAsync();
+
+            _cachedToken =
+                result.AccessToken;
+
+            _expiresOn =
+                result.ExpiresOn;
 
             Console.WriteLine(
-    $"Token acquired for: {result.Account}");
+                $"Token acquired");
 
-Console.WriteLine(
-    $"Expires: {result.ExpiresOn}");
+            Console.WriteLine(
+                $"Expires: {_expiresOn}");
 
-Console.WriteLine(
-    $"Configured Resource: {_settings.Resource}");
-
-Console.WriteLine(
-    $"ClientId: {_settings.ClientId}");
-    
-            var jwt =
-    result.AccessToken
-    .Split('.');
-
-if(jwt.Length > 1)
-{
-    var payload =
-        jwt[1];
-
-    payload +=
-        new string(
-            '=',
-            (4 - payload.Length % 4) % 4);
-
-    var json =
-        System.Text.Encoding.UTF8
-        .GetString(
-            Convert.FromBase64String(
-                payload
-                .Replace('-','+')
-                .Replace('_','/')));
-
-    Console.WriteLine(
-        $"TOKEN PAYLOAD:\n{json}");
-}
-
-return result.AccessToken;
-
+            return
+                _cachedToken;
         }
         catch(Exception ex)
         {

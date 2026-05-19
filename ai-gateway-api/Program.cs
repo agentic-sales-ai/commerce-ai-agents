@@ -23,7 +23,7 @@ builder.Services
         RetailServerClient>();
 
 builder.Services
-    .AddScoped<
+    .AddSingleton<
         IAuthService,
         MockAuthService>();
         
